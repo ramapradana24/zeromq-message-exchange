@@ -10,15 +10,7 @@ $SERVER_IP = "tcp://127.0.0.1";
 $SERVER_PORT = 5555;
 
 #mysql connection
-$host = '127.0.0.1';
-$username = 'rama';
-$password = 'ramapradana24';
-$db = 'db_server_mca';
-
-$conn = new mysqli($host, $username, $password, $db);
-if($conn->connect_error){
-    die("Connection Failed:" . $conn->connect_error);
-}
+include('db.php');
 #################
 
 $context = new ZMQContext();
@@ -29,7 +21,7 @@ $sender = new ZMQSocket($context, ZMQ::SOCKET_REQ);
 while(true){
     #count outbox in mysql database
     $countSql = 'SELECT * FROM outbox where outbox_status = 0';
-    $result = $conn->query($countSql);
+    $result = $connection->query($countSql);
 
 
     if(mysqli_num_rows($result) > 0){
@@ -68,7 +60,7 @@ while(true){
             #ACK Reply from host receiver
             if($reqType == 2){
                 $sql = "UPDATE outbox set outbox_status = 2 where outbox_id = " .$outboxId;
-                $conn->query($sql);
+                $connection->query($sql);
             }
 
             #BAD ACK Reply
@@ -98,7 +90,7 @@ while(true){
         }
         
         $updateStatusToProceed = "UPDATE outbox set outbox_status = 1 where outbox_status = 0";
-        $conn->query($updateStatusToProceed);
+        $connection->query($updateStatusToProceed);
     }
 
     else{

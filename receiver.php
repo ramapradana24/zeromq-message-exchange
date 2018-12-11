@@ -4,16 +4,7 @@ $IP = 'tcp://127.0.0.1';
 $PORT = '5555';
 
 
-$host = '127.0.0.1';
-$username = 'rama';
-$password = 'ramapradana24';
-$db = 'db_server_mca';
-
-$connection = new mysqli($host, $username, $password, $db);
-
-if($connection->connect_error){
-    die('Connection Failed: ' . $connection->connect_error);
-}
+include('db.php');
 
 
 $context = new ZMQContext(1);
